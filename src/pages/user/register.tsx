@@ -2,7 +2,8 @@
 import React from 'react';
 import { css, jsx } from '@emotion/core'
 import Link from 'next/link';
-
+import fetch from 'isomorphic-unfetch';
+import ApolloClient, { DocumentNode, gql } from 'apollo-boost';
 
 interface RegisterState
 {
@@ -21,6 +22,15 @@ interface RegisterState
     password: string;
     passwordInvalid: boolean;
     passwordInvalidString: string;
+
+    hasQueryElement: boolean;
+    queryElement?: (query: DocumentNode, variables: any) => void;
+}
+
+
+interface QueryHandlerProps
+{
+    createQueryHandler: (handler: (query: DocumentNode, variables:any) => void) => void;
 }
 
 export default class Register extends React.Component<{},RegisterState>{
@@ -41,7 +51,8 @@ export default class Register extends React.Component<{},RegisterState>{
             confirmInvalidString: "",
             emailInvalidString: "",
             passwordInvalidString: "",
-            usernameInvalidSting: ""
+            usernameInvalidSting: "",
+            hasQueryElement:false,
         };
     }
 
@@ -112,7 +123,26 @@ export default class Register extends React.Component<{},RegisterState>{
     
     onSubmit()
     {
-        
+        const GET_USER_DATA = {query:`
+        mutation registerUser
+        {
+          registerUser(username:"` + this.state.username + `",email:"`+ this.state.email +`",password:"`+
+          this.state.password + `")
+          {
+            username,
+            email,
+            id
+          }
+        }
+        `};
+
+        fetch('/api/graphql',{
+            method:"POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(GET_USER_DATA),
+            
+        })  .then(res => res.json())
+        .then(res => console.log(res.data));
         console.log(this.validateData())
         console.log(this.state);
     }

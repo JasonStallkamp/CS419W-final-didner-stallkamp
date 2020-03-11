@@ -4,8 +4,7 @@ const { DataSource } = require('apollo-datasource');
 import {User} from '../../component/User'
 const bcrypt = require("bcrypt")
 var randomstring = require("randomstring");
-import { useApolloClient, useMutation } from '@apollo/react-hooks';
-
+const fs = require('fs');
 
 
 
@@ -75,7 +74,8 @@ type Mutation{
 }
 `;
 
-let userDataSource = new UserDataSource([]);
+let rawdata = fs.readFileSync('Users.json');
+let userDataSource = new UserDataSource(JSON.parse(rawdata));
 
 const resolvers = {
 
@@ -114,6 +114,7 @@ const resolvers = {
       let id = randomstring.generate(24);
       console.log(id);
       userDataSource.data.set(id,{id, username:args.username, email:args.email,hash:hash});
+      fs.writeFileSync("Users.json", JSON.stringify(Array.from(userDataSource.data.values())));
       console.log(userDataSource);
       return userDataSource.getUserById(id);
     }
