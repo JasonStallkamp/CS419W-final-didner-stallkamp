@@ -1,7 +1,7 @@
-export default interface User
+export interface User
 {
     id: String;
     username: String;
     email: String;
-    passwordHash: String;
+    hash: String;
 }
