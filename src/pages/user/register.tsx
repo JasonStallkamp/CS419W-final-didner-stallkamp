@@ -1,10 +1,11 @@
 /** @jsx jsx */
 import React from 'react';
 import { css, jsx } from '@emotion/core'
-import Link from 'next/link';
 import fetch from 'isomorphic-unfetch';
 import ApolloClient, { DocumentNode, gql } from 'apollo-boost';
 import Navbar from '../../component/Navbar'
+import {withRouter, NextRouter } from 'next/router'
+import { WithRouterProps } from 'next/dist/client/with-router';
 
 interface RegisterState
 {
@@ -26,6 +27,8 @@ interface RegisterState
 
     hasQueryElement: boolean;
     queryElement?: (query: DocumentNode, variables: any) => void;
+
+    router: NextRouter;
 }
 
 
@@ -34,9 +37,9 @@ interface QueryHandlerProps
     createQueryHandler: (handler: (query: DocumentNode, variables:any) => void) => void;
 }
 
-export default class Register extends React.Component<{},RegisterState>{
+class Register extends React.Component<WithRouterProps,RegisterState>{
 
-    constructor(props: {})
+    constructor(props: WithRouterProps)
     {
         super(props);
         this.state =
@@ -54,6 +57,7 @@ export default class Register extends React.Component<{},RegisterState>{
             passwordInvalidString: "",
             usernameInvalidSting: "",
             hasQueryElement:false,
+            router: props.router
         };
     }
 
@@ -116,7 +120,6 @@ export default class Register extends React.Component<{},RegisterState>{
         }
 
         this.setState((oldState =>{
-            console.log(errorStrings);
             return {...oldState, ...errorStrings};
         }));
         return valid;
@@ -124,15 +127,21 @@ export default class Register extends React.Component<{},RegisterState>{
 
     onSubmit()
     {
+        if(!this.validateData())
+            return;
         const GET_USER_DATA = {query:`
         mutation registerUser
         {
           registerUser(username:"` + this.state.username + `",email:"`+ this.state.email +`",password:"`+
           this.state.password + `")
           {
-            username,
-            email,
-            id
+            isErrored,
+            errorMsg,
+            token
+            {
+                token,
+                Expire
+            }
           }
         }
         `};
@@ -143,9 +152,23 @@ export default class Register extends React.Component<{},RegisterState>{
             body: JSON.stringify(GET_USER_DATA),
 
         })  .then(res => res.json())
-        .then(res => console.log(res.data));
-        console.log(this.validateData())
-        console.log(this.state);
+        .then(res => {
+            if(!res.data.registerUser.isErrored)
+            {
+                this.state.router.replace('/');
+            }
+            else
+            {
+                if(res.data.registerUser.errorMsg.includes("Email"))
+                {
+                    this.setState(old => ({...old,emailInvalid:true,emailInvalidString:res.data.registerUser.errorMsg}))
+                }
+                if(res.data.registerUser.errorMsg.includes("Username"))
+                {
+                    this.setState(old => ({...old,usernameInvalid:true,usernameInvalidSting:res.data.registerUser.errorMsg}))
+                }
+            }
+        });
     }
 
     CreateOnChange(property: string) : (event: React.ChangeEvent<HTMLInputElement>) => any
@@ -186,7 +209,8 @@ export default class Register extends React.Component<{},RegisterState>{
                 <input onChange={this.CreateOnChange("confirm")} value={this.state.confirm} type="password"></input>
             </div>
             <button onClick={this.onSubmit.bind(this)}>Register</button>
-            <Link href="/user/login">Already a User? Login</Link>
         </div>);
     }
 }
+
+export default  withRouter(Register);

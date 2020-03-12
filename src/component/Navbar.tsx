@@ -1,12 +1,34 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
 import React,{useState, useEffect} from 'react';
+import fetch from 'isomorphic-unfetch';
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 
+
 function Navbar(props) {
 
+  const[isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+  const[CheckLogginState,setCheckLogginState] = useState<boolean>(false)
+
+  useEffect(() =>{
+    if(!CheckLogginState)
+    {
+      setCheckLogginState(true);
+      const GraphQLQuerry = {query:`
+      {
+        isLoggedIn
+      }
+      `};
+      fetch('/api/graphql',{
+        method:"POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(GraphQLQuerry)}).then(res => res.json()).then(res =>{
+          setIsLoggedIn(res.data.isLoggedIn);
+        })
+    }
+  })
 
 
   const ul = css`
@@ -22,24 +44,32 @@ function Navbar(props) {
       padding: 0px;
     }
   `;
+  if(isLoggedIn)
+  {
+    return (
+      <div>
+      <ul css={ul}>
+        <NavigationLink path="/" align="left">Home</NavigationLink>
+        <NavigationLink path="/explore" align="left">Explore</NavigationLink>
+        <NavigationLink path="/user/loggout" align="right">Loggout</NavigationLink>
+      </ul>
+      </div>
+    );
+  }
+  else
+  {
+    return (
+      <div>
+      <ul css={ul}>
+        <NavigationLink path="/" align="left">Home</NavigationLink>
+        <NavigationLink path="/explore" align="left">Explore</NavigationLink>
+        <NavigationLink path="/user/register" align="right">Register</NavigationLink>
+        <NavigationLink path="/user/login" align="right">Login</NavigationLink>
+      </ul>
+      </div>
+    );
+  }
 
-
-
-
-  return (
-    <div>
-    <ul css={ul}>
-      <NavigationLink path="/" align="left">Home</NavigationLink>
-      <NavigationLink path="/explore" align="left">Explore</NavigationLink>
-      <NavigationLink path="/user/register" align="right">Register</NavigationLink>
-      <NavigationLink path="/user/login" align="right">Login</NavigationLink>
-    </ul>
-
-
-
-    </div>
-
-  );
 }
 
 

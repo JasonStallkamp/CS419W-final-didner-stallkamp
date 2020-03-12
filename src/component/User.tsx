@@ -1,7 +1,14 @@
 export interface User
 {
-    id: String;
-    username: String;
-    email: String;
-    hash: String;
+    id: string;
+    username: string;
+    email: string;
+    hash: string;
+}
+
+export interface UserAuthToken
+{
+  userId: string;
+  token: string;
+  Expire: string;
 }
