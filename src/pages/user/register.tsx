@@ -4,6 +4,7 @@ import { css, jsx } from '@emotion/core'
 import Link from 'next/link';
 import fetch from 'isomorphic-unfetch';
 import ApolloClient, { DocumentNode, gql } from 'apollo-boost';
+import Navbar from '../../component/Navbar'
 
 interface RegisterState
 {
@@ -38,11 +39,11 @@ export default class Register extends React.Component<{},RegisterState>{
     constructor(props: {})
     {
         super(props);
-        this.state = 
+        this.state =
         {
-            email:"", 
-            username:"", 
-            confirm:"", 
+            email:"",
+            username:"",
+            confirm:"",
             password:"",
             confirmInvalid:false,
             emailInvalid:false,
@@ -120,7 +121,7 @@ export default class Register extends React.Component<{},RegisterState>{
         }));
         return valid;
     }
-    
+
     onSubmit()
     {
         const GET_USER_DATA = {query:`
@@ -140,7 +141,7 @@ export default class Register extends React.Component<{},RegisterState>{
             method:"POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(GET_USER_DATA),
-            
+
         })  .then(res => res.json())
         .then(res => console.log(res.data));
         console.log(this.validateData())
@@ -163,6 +164,7 @@ export default class Register extends React.Component<{},RegisterState>{
         let invalidInputBlock = css({backgroundColor:"#FFCCCC"});
 
         return (<div>
+            <Navbar/>
             <div css={this.state.emailInvalid ? [inputBlock, invalidInputBlock]: inputBlock}>
                 <h1 css={labelStyle}>Email</h1>
                 <h4 css={this.state.emailInvalid ?  [errorLabelStype] : [errorLabelStype, hidden]}>{this.state.emailInvalidString}</h4>
