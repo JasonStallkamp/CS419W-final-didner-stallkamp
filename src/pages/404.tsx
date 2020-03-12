@@ -1,12 +1,10 @@
 import Navbar from '../component/Navbar'
 
-function Home(){
+export default function Custom404() {
   return (
     <div>
       <Navbar/>
-      <h1>Hello world!</h1>
+      <h1>404 - Page Not Found</h1>
     </div>
   );
 }
-
-export default Home;

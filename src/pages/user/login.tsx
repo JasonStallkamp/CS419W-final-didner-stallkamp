@@ -2,6 +2,7 @@
 import React from 'react';
 import { css, jsx } from '@emotion/core'
 import Link from 'next/link'
+import Navbar from '../../component/Navbar'
 
 interface LoginState
 {
@@ -35,7 +36,7 @@ export default class Login extends React.Component<{},LoginState>
     }
 
 
-        
+
     onSubmit()
     {
         console.log(this.state);
@@ -49,6 +50,7 @@ export default class Login extends React.Component<{},LoginState>
         let errorLabelStype = css({margin:"3px 0px 0px 0px", color:"#FF0000"})
 
         return (<div>
+            <Navbar/>
             <div css={inputBlock}>
                 <h1 css={labelStyle}>Email or Username</h1>
                 <input onChange={this.CreateOnChange("email")} value={this.state.name} type="email" ></input>
