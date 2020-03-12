@@ -38,11 +38,6 @@ function Navbar(props) {
     background-color: black;
     flex: 1;
     padding: 10px;
-    @media (max-width: 768px) {
-      width: 0px;
-      height: 0px;
-      padding: 0px;
-    }
   `;
   if(isLoggedIn)
   {
@@ -51,6 +46,7 @@ function Navbar(props) {
       <ul css={ul}>
         <NavigationLink path="/" align="left">Home</NavigationLink>
         <NavigationLink path="/explore" align="left">Explore</NavigationLink>
+        <NavigationLink path="/write/1" align="left">Write</NavigationLink>
         <NavigationLink path="/user/loggout" align="right">Loggout</NavigationLink>
       </ul>
       </div>
@@ -63,13 +59,13 @@ function Navbar(props) {
       <ul css={ul}>
         <NavigationLink path="/" align="left">Home</NavigationLink>
         <NavigationLink path="/explore" align="left">Explore</NavigationLink>
+        <NavigationLink path="/write/1" align="left">Write</NavigationLink>
         <NavigationLink path="/user/register" align="right">Register</NavigationLink>
         <NavigationLink path="/user/login" align="right">Login</NavigationLink>
       </ul>
       </div>
     );
   }
-
 }
 
 
