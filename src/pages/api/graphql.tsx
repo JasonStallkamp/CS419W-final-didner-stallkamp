@@ -7,6 +7,7 @@ const fs = require('fs');
 
 import nextCookie from 'next-cookies'
 import { serialize } from 'cookie';
+import Post from "../../component/Post";
 
 const COOKIE_NAME= "Auth";
 
@@ -18,7 +19,7 @@ class UserDataSource extends DataSource<object>{
   data: Map<String,User>
   constructor(data : User[])
   {
-      super();
+      super(data);
       this.data = new Map<String,User>();
       for(let i = 0; i < data.length; i++)
       {
@@ -48,6 +49,28 @@ class UserDataSource extends DataSource<object>{
   }
 }
 
+class PostDataSource extends DataSource<object>{
+  data: Map<String, Post>
+  constructor(data: Post[])
+  {
+    super(data);
+    this.data = new Map<String,Post>();
+    for(let i = 0; i < data.length; i++)
+    {
+        this.data.set(data[i].id, data[i])
+    }
+  }
+  getPostsByUser(user: User) : Post[]
+  {
+    return this.getPostByUserId(user.id);
+  }
+  getPostByUserId(userid: String): Post[]
+  {
+    return Array.from(this.data.values()).filter((post) => post.authorID === userid)
+  }
+
+}
+
 
 
 
@@ -55,7 +78,18 @@ const typeDefs = gql`
 type User{
   id: String!,
   username: String!,
-  email: String!
+  email: String!,
+  posts: [Post!]!
+}
+
+type Post
+{
+  id: String!,
+  author: User,
+  title: String!,
+  prompt: String!,
+  body: String!,
+  tags: [String!]
 }
 
 type ErrorableOrUserAuthToken
@@ -70,11 +104,18 @@ type UserAuthToken
   token: String!,
   Expire: String!,
 }
+type LoggedInState
+{
+  isLoggedIn: Boolean!,
+  userid: String,
+}
 
 type Query {
   listUsers: [User!]
   login(name: String, password: String) : ErrorableOrUserAuthToken
-  isLoggedIn: Boolean!
+  isLoggedIn: LoggedInState
+  getLatestPosts(max: Int): [Post]
+  getPostsByUser(userid: String): [Post]
 }
 
 type Mutation{
@@ -85,6 +126,10 @@ type Mutation{
 
 let rawdata = fs.readFileSync('Users.json');
 let userDataSource = new UserDataSource(JSON.parse(rawdata));
+
+rawdata = fs.readFileSync('Posts.json');
+let postDataSource = new PostDataSource(JSON.parse(rawdata));
+
 let UserTokens = new Map<string,UserAuthToken>();
 
 
@@ -113,7 +158,10 @@ function isAuthorized(req: any) : boolean
   
 }
 
-
+function getUserId(req: any) : string
+{
+  return JSON.parse(req.cookies[COOKIE_NAME]).userId
+}
 
 const resolvers = {
 
@@ -145,7 +193,30 @@ const resolvers = {
     },
     isLoggedIn(parent, args, context, info)
     {
-      return isAuthorized(context.req);
+      if(isAuthorized(context.req))
+        return {isLoggedIn:true, userid:getUserId(context.req)};
+      return {isLoggedIn:false};
+    },
+    getLatestPosts(parent, args, context, info)
+    {
+      if(args.max == 0)
+      {
+        return Array.from(postDataSource.data.values());
+      }
+      else
+      {
+        return Array.from(postDataSource.data.values()).sort((a,b) => {
+          if(a.creationTime < b.creationTime)
+            return -1;
+          if(a.creationTime > b.creationTime)
+            return 1;
+          return 0;
+        });
+      }
+    },
+    getPostsByUser(parent, args, context, info)
+    {
+      return postDataSource.getPostByUserId(args.userid);//postDataSource.getPostsByUser(userDataSource.getUserById(args.userid));
     }
 
   },
@@ -199,6 +270,16 @@ const resolvers = {
       }));
       return true;
     }
+  },
+
+  Post:{
+    author:(post : Post, _, __) =>{
+      return userDataSource.getUserById(post.authorID);
+    }
+  },
+
+  User:{
+    posts:(user: User, _, __) => postDataSource.getPostsByUser(user)
   }
 };
 

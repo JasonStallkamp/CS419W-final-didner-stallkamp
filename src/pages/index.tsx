@@ -1,12 +1,20 @@
-import Navbar from '../component/Navbar'
+import PostExploreSection from '../component/PostExploreSection'
 
 function Home(){
-  return (
-    <div>
-      <Navbar/>
-      <h1>Hello world!</h1>
-    </div>
-  );
+  return <PostExploreSection query={`
+  {
+      getLatestPosts(max:20)
+      {
+        id,
+        title,
+        author{
+          username,
+          id
+        },
+        tags
+      }
+    }
+  `}></PostExploreSection>
 }
 
 export default Home;

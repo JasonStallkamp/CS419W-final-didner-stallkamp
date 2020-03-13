@@ -1,0 +1,19 @@
+[
+{
+"id":"xHqUqiR7uJgWtiNNByrUBOeF",
+"authorID":"xHqUqiR7uJgWtiNNByrUBOeF",
+"title":"test post title",
+"prompt":"test post prompt",
+"body":"test post body",
+"tags":["tag 1","tag 2"]
+},
+{
+"id":"xHqUqlR7uagWfiNNByrUBOeF",
+"authorID":"xHqUqiR7uJgWtiNNByrUBOeF",
+"title":"test post title 2",
+"prompt":"test post prompt 2",
+"body":"test post body 2",
+"tags":["tag 1","tag 3"]
+}
+
+]

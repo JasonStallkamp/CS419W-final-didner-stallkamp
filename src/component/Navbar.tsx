@@ -11,7 +11,7 @@ function Navbar(props) {
 
   const[isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
   const[CheckLogginState,setCheckLogginState] = useState<boolean>(false)
-
+  const[userid, setUserId] = useState<string>("");
   useEffect(() =>{
     if(!CheckLogginState)
     {
@@ -19,13 +19,21 @@ function Navbar(props) {
       const GraphQLQuerry = {query:`
       {
         isLoggedIn
+        {
+          isLoggedIn,
+          userid
+        }
       }
       `};
       fetch('/api/graphql',{
         method:"POST",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(GraphQLQuerry)}).then(res => res.json()).then(res =>{
-          setIsLoggedIn(res.data.isLoggedIn);
+          setIsLoggedIn(res.data.isLoggedIn.isLoggedIn);
+          if(res.data.isLoggedIn.isLoggedIn)
+          {
+            setUserId(res.data.isLoggedIn.userid);
+          }
         })
     }
   })
@@ -48,6 +56,7 @@ function Navbar(props) {
         <NavigationLink path="/explore" align="left">Explore</NavigationLink>
         <NavigationLink path="/write/1" align="left">Write</NavigationLink>
         <NavigationLink path="/user/loggout" align="right">Loggout</NavigationLink>
+        <NavigationLink path="/user/[userid]" as={"/user/" + userid} align="right">My Posts</NavigationLink>
       </ul>
       </div>
     );
@@ -94,18 +103,13 @@ function NavigationLink(props){
     padding: "10px";
   `;
 
-
-
-
   return (
     <li css={outerstyle}>
-
-        <Link href={props.path}>
+        <Link href={props.path} as={props.as === undefined ? props.path : props.as} >
           <div css={style}>
             {props.children}
           </div>
         </Link>
-
     </li>);
 }
 
