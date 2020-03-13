@@ -7,13 +7,7 @@ export default function Explore() {
     {
         getLatestPosts(max:20)
         {
-          id,
-          title,
-          author{
-            username,
-            id
-          },
-          tags
+            $values
         }
       }
     `}></PostExploreSection>

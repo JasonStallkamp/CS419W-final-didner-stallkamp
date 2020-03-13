@@ -5,13 +5,7 @@ function Home(){
   {
       getLatestPosts(max:20)
       {
-        id,
-        title,
-        author{
-          username,
-          id
-        },
-        tags
+        $values
       }
     }
   `}></PostExploreSection>

@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 
 
 function Navbar(props) {
-
   const[isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
   const[CheckLogginState,setCheckLogginState] = useState<boolean>(false)
   const[userid, setUserId] = useState<string>("");
@@ -112,9 +111,6 @@ function NavigationLink(props){
         </Link>
     </li>);
 }
-
-
-
 
 
 export default Navbar;

@@ -11,37 +11,106 @@ interface PostDisplayProp
     id: string;
     title: string;
     author:{id:string, username:string};
-    tags: [string]
+    tags: [string],
+    prompt: string,
+    body: string
 }
 
 function PostDisplay({toDisplay}: {toDisplay:PostDisplayProp})
 {
     const divCss = css({
         display:"block",
-        backgroundColor:"red"
+        backgroundColor:"lightgray"
     })
 
+    const titleCSS = css({
+        margin:"0px 0px 0px 0px",
+        display:"inline-block"
+
+    });
+
+    const userCSS = css({
+        margin:"0px 0px 0px 10px",
+        display:"inline-block",
+        color:"#333333",
+    })
+
+    const userTextCSS = css({
+        textDecoration:"None",
+        ":hover":{
+            color:"blue",
+            textDecoration:"underline"
+        }
+    })
+    const tagBlockCSS = css(
+        {
+            display:"inline-block",
+            backgroundColor:"white",
+            margin:"5px 0px 0px 10px",
+            borderRadius:"2px"
+        })
+    const tagTextCSS = css({
+        margin:"0px 0px 0px 0px"
+    });
+
+    const tagMap = toDisplay.tags.map(item =>{
+        return (
+            <Link href="/tag/[tag]" as={"/tag/" + item} key={item}>
+                <div css={tagBlockCSS} >
+                    <h4 css={tagTextCSS}>{item}</h4>
+                </div>
+            </Link>);
+    });
+
     return(<div css={divCss}>
-            <h1>{toDisplay.title}</h1>
-            <Link href="/user/[userid]" as={"/user/" + toDisplay.author.id}><a>{toDisplay.author.username}</a></Link>
+            <Link href="/share/[storyid]" as={"/share/" + toDisplay.id}>
+                <div>
+                    <h1 css={titleCSS}>{toDisplay.title}</h1>
+                    <h4 css={userCSS}> • Posted by:<Link  href="/user/[userid]" as={"/user/" + toDisplay.author.id}><a css={userTextCSS}>{toDisplay.author.username}</a></Link></h4>
+                    <div>
+                        {tagMap}
+                    </div>
+                    <p><strong>Prompt:</strong>{toDisplay.prompt}</p>
+                    <p><strong>Body:</strong>{toDisplay.body}</p>
+                </div>
+            </Link>
+            
+            
         </div>);
 }
 
 
-export default function PostExploreSection(props : {query: String}) {
+function PostExploreSection(props : {query: String}) {
     let [stories, setStories] = useState<PostDisplayProp[]>([]);
-    let [areStoriesSet, setAreStoriesSet] = useState<boolean>(false);
-    if(!areStoriesSet)
+    let [areStoriesSet, setAreStoriesSet] = useState<string>("");
+    const router = useRouter();
+    if(areStoriesSet !== router.asPath)
     {
-        console.log(props.query);
-        setAreStoriesSet(true);
-        const GraphQLQuerry = {query:props.query};
-      fetch('/api/graphql',{
-        method:"POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(GraphQLQuerry)}).then(res => res.json()).then(res =>{
+        
+        let varQuery = props.query.replace("$values",`
+        id,
+        title,
+        author{
+          username,
+          id
+        },
+        tags,
+        prompt,
+        body
+        `)
+        setAreStoriesSet(router.asPath);
+        const GraphQLQuerry = {query:varQuery};
+        let apiPromis = fetch('/api/graphql',{
+            method:"POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(GraphQLQuerry)})
+        
+        
+        apiPromis.catch((reason) => {
+            console.log(reason);
+        })
+        apiPromis.then(res => res.json()).then(res =>{
             setStories(res.data[Object.getOwnPropertyNames(res.data)[0]]);
-            console.log(res.data[Object.getOwnPropertyNames(res.data)[0]]);
         })
     }
 
@@ -55,4 +124,5 @@ export default function PostExploreSection(props : {query: String}) {
       </div>
     );
   }
-  
+
+  export default PostExploreSection

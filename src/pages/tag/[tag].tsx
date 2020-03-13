@@ -5,9 +5,9 @@ import PostExploreSection from '../../component/PostExploreSection'
 
 export default function ShareStoryId(){
     const router = useRouter();
-    const userID = router.query.userid;
+    const tag = router.query.tag;
     let query = `{
-        getPostsByUser(userid:"`+userID +`")
+        getPostByTag(tag:"`+tag +`")
         {
             $values
         }

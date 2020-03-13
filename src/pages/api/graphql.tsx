@@ -68,11 +68,39 @@ class PostDataSource extends DataSource<object>{
   {
     return Array.from(this.data.values()).filter((post) => post.authorID === userid)
   }
+  getPostByTag(tag: String): Post[]
+  {
+    return Array.from(this.data.values()).filter(post => post.tags.includes(tag));
+  }
 
 }
 
+class TokenDataSource extends DataSource<object>{
+  data: Map<String, UserAuthToken>
+  constructor(data: UserAuthToken[])
+  {
+    super(data);
+    this.data = new Map<String,UserAuthToken>();
+    for(let i = 0; i < data.length; i++)
+    {
+        this.data.set(data[i].token, data[i])
+    }
+  }
 
+  GenerateUserAuth(user: User) : UserAuthToken
+  {
+    let newToken = {userId:user.id,token:randomstring.generate(24), Expire: "" + new Date().getTime() + 1000 * 60 * 60 * 24 * 30};
+    this.data.set(newToken.token,newToken);
+    fs.writeFileSync("tokens.json",JSON.stringify(Array.from(this.data.values())))
+    return newToken
+  }
 
+  GetUserAuthToken(token: string) : UserAuthToken
+  {
+    return this.data.get(token)
+  }
+
+}
 
 const typeDefs = gql`
 type User{
@@ -116,6 +144,7 @@ type Query {
   isLoggedIn: LoggedInState
   getLatestPosts(max: Int): [Post]
   getPostsByUser(userid: String): [Post]
+  getPostByTag(tag: String): [Post]
 }
 
 type Mutation{
@@ -124,25 +153,30 @@ type Mutation{
 }
 `;
 
+if(!fs.existsSync('Users.json'))
+{
+  fs.writeFileSync('Users.json','[]')
+}
 let rawdata = fs.readFileSync('Users.json');
 let userDataSource = new UserDataSource(JSON.parse(rawdata));
 
+if(!fs.existsSync('Posts.json'))
+{
+  fs.writeFileSync('Posts.json','[]')
+}
 rawdata = fs.readFileSync('Posts.json');
 let postDataSource = new PostDataSource(JSON.parse(rawdata));
 
-let UserTokens = new Map<string,UserAuthToken>();
-
-
-function GenerateUserAuth(user: User) : UserAuthToken
+if(!fs.existsSync('tokens.json'))
 {
-  let newToken = {userId:user.id,token:randomstring.generate(24), Expire: "" + new Date().getTime() + 1000 * 60 * 60 * 24 * 30};
-  UserTokens.set(newToken.token,newToken);
-  return newToken
+  fs.writeFileSync('tokens.json','[]')
 }
+rawdata = fs.readFileSync('tokens.json');
+let tokenDataSource = new TokenDataSource(JSON.parse(rawdata));
 
 function isAuthTokenValid(token: UserAuthToken) : boolean
 {
-  let compare = UserTokens.get(token.token);
+  let compare = tokenDataSource.GetUserAuthToken(token.token);
   return compare.token === token.token && token.Expire === compare.Expire && token.userId === compare.userId;
 }
 
@@ -163,6 +197,8 @@ function getUserId(req: any) : string
   return JSON.parse(req.cookies[COOKIE_NAME]).userId
 }
 
+const MAX_BULK_QUERY_BODY_LENGTH = 256;
+
 const resolvers = {
 
   Query: {
@@ -182,7 +218,7 @@ const resolvers = {
       let valid = await pCompare;
       if(! valid)
         return {isErrored:true,errorMsg:"Invalid Login Credentials"};
-      let token = GenerateUserAuth(user)
+      let token = tokenDataSource.GenerateUserAuth(user)
       context.res.setHeader('Set-Cookie',[serialize(COOKIE_NAME, JSON.stringify(token), {
         path: '/',
         httpOnly: true,
@@ -211,12 +247,16 @@ const resolvers = {
           if(a.creationTime > b.creationTime)
             return 1;
           return 0;
-        });
+        }).map(item => ({...item,body:item.body.length > MAX_BULK_QUERY_BODY_LENGTH ? item.body.substring(0,MAX_BULK_QUERY_BODY_LENGTH - 3) + "..." : item.body}));
       }
     },
     getPostsByUser(parent, args, context, info)
     {
-      return postDataSource.getPostByUserId(args.userid);//postDataSource.getPostsByUser(userDataSource.getUserById(args.userid));
+      return postDataSource.getPostByUserId(args.userid).map(item => ({...item,body:item.body.length > MAX_BULK_QUERY_BODY_LENGTH ? item.body.substring(0,MAX_BULK_QUERY_BODY_LENGTH - 3) + "..." : item.body}));
+    },
+    getPostByTag(parent, args, context, info)
+    {
+      return postDataSource.getPostByTag(args.tag).map(item => ({...item,body:item.body.length > MAX_BULK_QUERY_BODY_LENGTH ? item.body.substring(0,MAX_BULK_QUERY_BODY_LENGTH - 3) + "..." : item.body}));
     }
 
   },
@@ -246,7 +286,7 @@ const resolvers = {
       let id = randomstring.generate(24);
       userDataSource.data.set(id,{id, username:args.username, email:args.email,hash:hash});
       fs.writeFileSync("Users.json", JSON.stringify(Array.from(userDataSource.data.values())));
-      let token = GenerateUserAuth(userDataSource.getUserById(id));
+      let token = tokenDataSource.GenerateUserAuth(userDataSource.getUserById(id));
       context.res.setHeader('Set-Cookie',[serialize("auth", JSON.stringify(token), {
         path: '/',
         httpOnly: true,
