@@ -27,18 +27,56 @@ export default function WriteStoryId(){
 
 
   const spacer = css`
-    padding: 10;
+    margin: 10px;
+    padding: 10px;
+    background-color: lightgray;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
   `;
 
-  const [adj1, setAdj1] = useState(false)
-  const [adj2, setAdj2] = useState(false)
-  const [noun1, setNoun1] = useState(false)
-  const [adverb, setAdverb] = useState(false)
-  const [verb, setVerb] = useState(false)
-  const [adj3, setAdj3] = useState(false)
-  const [adj4, setAdj4] = useState(false)
-  const [noun2, setNoun2] = useState(false)
-  const [location,setLocation] = useState(false)
+  const container = css`
+    padding: 15px;
+    border: black;
+  `;
+
+  const [adj1, setAdj1] = useState<boolean>(false);
+  const [adj2, setAdj2] = useState<boolean>(false);
+  const [noun1, setNoun1] = useState<boolean>(false);
+  const [adverb, setAdverb] = useState<boolean>(false);
+  const [verb, setVerb] = useState<boolean>(false);
+  const [adj3, setAdj3] = useState<boolean>(false);
+  const [adj4, setAdj4] = useState<boolean>(false);
+  const [noun2, setNoun2] = useState<boolean>(false);
+  const [location,setLocation] = useState<boolean>(false);
+
+  const [promptResponse, setPromptResponse] = useState<string>("RESPONSE FROM PROMPT SITE WOULD GO HERE, HIT THE REFRESH BUTTON FOR A PROMPT");
+
+  async function fetchPrompt() {
+
+    let query: string = "";
+
+
+    adj1 ?  query = query.concat("adj") : null ;
+    adj2  ? query = query.concat("+adj") : null ;
+    noun1 ? query = query.concat("+noun") : null ;
+    adverb ? query = query.concat("+adv") : null ;
+    verb ? query = query.concat("+verb") : null ;
+    adj3 ? query = query.concat("+adj") : null ;
+    adj4 ? query = query.concat("+adj") : null ;
+    noun2 ? query = query.concat("+noun") : null ;
+    location ? query = query.concat("+location") : null ;
+
+    console.log("query: " + query);
+
+    const response = await fetch(
+      `https://ineedaprompt.com/dictionary/default/prompt?q=${query}`
+    );
+    const responseData = await response.json();
+    console.log(responseData)
+    setPromptResponse(responseData.english);
+  }
 
 
   return (
@@ -49,8 +87,12 @@ export default function WriteStoryId(){
       <div>
         <ul css={ul}>
           <li css={outerstyle}><text style={{padding: 10, fontSize: 25, backgroundColor: 'lightblue'}}>Prompt</text></li>
-          <li css={outerstyle}><text style={{padding: 10, fontSize: 25, backgroundColor: 'lightgreen'}}>↻</text></li>
+          <li css={outerstyle}><text onClick={() => fetchPrompt()} style={{padding: 10, fontSize: 25, backgroundColor: 'lightgreen'}}>↻</text></li>
         </ul>
+      </div>
+
+      <div css={container}>
+        <text> {promptResponse} </text>
       </div>
 
       <div>
@@ -67,13 +109,11 @@ export default function WriteStoryId(){
         </ul>
       </div>
 
-      <div>
-        <text> RESPONSE FROM PROMPT SITE WOULD GO HERE </text>
-      </div>
+
 
       <div>
         <ul css={ul}>
-          <li css={outerstyle}><div ><text css={spacer}>TEXT</text></div></li>
+          <li css={outerstyle}><div ><text>TEXT</text></div></li>
           <li css={outerstyle}><div ><text css={spacer}>Save</text></div></li>
           <li css={outerstyle}><div ><text css={spacer}>Share</text></div></li>
           <li css={outerstyle}><div ><text css={spacer}>Download</text></div></li>
@@ -97,13 +137,18 @@ function ListSelector(props){
 
   const style =css`
     padding: 10px;
+    margin: 10px;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
     background-color: ${props.selected ? "lightblue" : "gainsboro"};
   `;
 
   return (
     <li css={outerstyle}>
-      <div css={style}>
-        <text onClick={() => props.setter(prev => !prev)}>{props.children}</text>
+      <div onClick={() => props.setter(prev => !prev)} css={style}>
+        <text >{props.children}</text>
       </div>
     </li>
   );
