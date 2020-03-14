@@ -22,7 +22,7 @@ export default function WriteStoryId(){
 
   const textarea = css`
     height: 60%;
-    width: 60%;
+    width: 90%;
   `;
 
 
@@ -140,7 +140,7 @@ export default function WriteStoryId(){
       </div>
 
 
-      <textarea value={textArea} onChange={e => setTextArea(e.target.value)} css={textarea}> </textarea>
+      <textarea rows={20} value={textArea} onChange={e => setTextArea(e.target.value)} css={textarea}> </textarea>
 
     </div>
   );
