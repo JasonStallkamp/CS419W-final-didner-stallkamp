@@ -52,6 +52,8 @@ export default function WriteStoryId(){
   const [location,setLocation] = useState<boolean>(false);
 
   const [promptResponse, setPromptResponse] = useState<string>("RESPONSE FROM PROMPT SITE WOULD GO HERE, HIT THE REFRESH BUTTON FOR A PROMPT");
+  const [textArea, setTextArea] = useState<string>("");
+
 
   async function fetchPrompt() {
 
@@ -76,6 +78,23 @@ export default function WriteStoryId(){
     const responseData = await response.json();
     console.log(responseData)
     setPromptResponse(responseData.english);
+  }
+
+  function downloadTxtFile(){
+    const element = document.createElement("a");
+    const file = new Blob(["Prompt: \n" + promptResponse + "\n\n\n" + "Body: " + textArea], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "myStory.txt";
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+
+
+    // var data = new Blob([res], {type: 'text/csv'});
+    // var csvURL = window.URL.createObjectURL(data);
+    // tempLink = document.createElement('a');
+    // tempLink.href = csvURL;
+    // tempLink.setAttribute('download', 'filename.csv');
+    // tempLink.click();
   }
 
 
@@ -116,12 +135,12 @@ export default function WriteStoryId(){
           <li css={outerstyle}><div ><text>TEXT</text></div></li>
           <li css={outerstyle}><div ><text css={spacer}>Save</text></div></li>
           <li css={outerstyle}><div ><text css={spacer}>Share</text></div></li>
-          <li css={outerstyle}><div ><text css={spacer}>Download</text></div></li>
+          <li css={outerstyle}><div onClick={() => downloadTxtFile()}><text css={spacer}>Download</text></div></li>
         </ul>
       </div>
 
 
-      <textarea css={textarea}> </textarea>
+      <textarea value={textArea} onChange={e => setTextArea(e.target.value)} css={textarea}> </textarea>
 
     </div>
   );
