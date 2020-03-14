@@ -37,6 +37,15 @@ function Navbar(props) {
     }
   })
 
+  function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+  const StoryID = uuidv4();
+
 
   const ul = css`
     list-style-type: none;
@@ -65,9 +74,8 @@ function Navbar(props) {
     return (
       <div>
       <ul css={ul}>
-        <NavigationLink path="/" align="left">Home</NavigationLink>
         <NavigationLink path="/explore" align="left">Explore</NavigationLink>
-        <NavigationLink path="/write/1" align="left">Write</NavigationLink>
+        <NavigationLink path={"/write/" + StoryID} align="left">Write</NavigationLink>
         <NavigationLink path="/user/register" align="right">Register</NavigationLink>
         <NavigationLink path="/user/login" align="right">Login</NavigationLink>
       </ul>
@@ -76,10 +84,16 @@ function Navbar(props) {
   }
 }
 
+function highlight(routerpathname, propspath){
+  routerpathname = routerpathname.replace('[storyid]','');
+  return propspath.includes(routerpathname);
+}
+
 
 function NavigationLink(props){
 
   const router = useRouter();
+
 
   const style = css`
     color: white;
@@ -88,7 +102,7 @@ function NavigationLink(props){
     &:hover {
       background-color: gainsboro;
     }
-    background-color: ${router.pathname == props.path ? "gainsboro" : "black"};
+    background-color: ${highlight(router.pathname, props.path) ? "gainsboro" : "black"};
   `;
 
   const outerstyle = css`
