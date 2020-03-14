@@ -2,6 +2,8 @@
 import { jsx, css } from '@emotion/core';
 import React,{useState} from 'react';
 import Link from 'next/link';
+import Navbar from '../../component/Navbar';
+
 
 export default function ShareStoryId(){
 
@@ -19,26 +21,34 @@ export default function ShareStoryId(){
   const [textArea, setTextArea] = useState<string>("");
 
 
+
   return(
-    <form>
-      <label>
-        Title:
-        <input type="text" name="title" />
-      </label>
+    <div>
+      <Navbar/>
+      <form>
+        <div>
+          <label>
+            Title:
+            <input type="text" name="title" />
+          </label>
+        </div>
 
-      <label>
-        Name:
-        <input type="text" name="name" />
-      </label>
+        <div>
+          <label>
+            Name:
+            <input type="text" name="name" />
+          </label>
+        </div>
 
-      <div css={container}>
-        <text> {promptResponse} </text>
-      </div>
+        <div css={container}>
+          <text> Prompt:  </text>
+          <text> {promptResponse} </text>
+        </div>
 
-      <textarea rows={20} value={textArea} onChange={e => setTextArea(e.target.value)} css={textarea}> </textarea>
+        <textarea rows={20} value={textArea} onChange={e => setTextArea(e.target.value)} css={textarea}> </textarea>
 
-      <input type="submit" value="Submit" />
-    </form>
-
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
   );
 }

@@ -3,7 +3,8 @@ import { jsx, css } from '@emotion/core';
 import React,{useState} from 'react';
 import Link from 'next/link';
 import Navbar from '../../component/Navbar';
-
+import { useRouter } from "next/router";
+import Router from 'next/router';
 
 export default function WriteStoryId(){
 
@@ -97,6 +98,13 @@ export default function WriteStoryId(){
     // tempLink.click();
   }
 
+  const router = useRouter();
+
+  function moveToShare(){
+    console.log(router.query)
+    router.push("/share/" + router.query.storyid);
+  }
+
 
   return (
     <div>
@@ -134,7 +142,7 @@ export default function WriteStoryId(){
         <ul css={ul}>
           <li css={outerstyle}><div ><text>TEXT</text></div></li>
           <li css={outerstyle}><div ><text css={spacer}>Save</text></div></li>
-          <li css={outerstyle}><div ><text css={spacer}>Share</text></div></li>
+          <li css={outerstyle}><div onClick={() => moveToShare()}><text css={spacer}>Share</text></div></li>
           <li css={outerstyle}><div onClick={() => downloadTxtFile()}><text css={spacer}>Download</text></div></li>
         </ul>
       </div>
