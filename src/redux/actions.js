@@ -10,6 +10,7 @@ export function setLoginStatus(payload){
 
 
 export function setPrompt(payload){
+  console.log("action payload: " + payload);
   return {type: SET_PROMPT, payload}
 }
 

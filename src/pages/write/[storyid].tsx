@@ -6,6 +6,13 @@ import Navbar from '../../component/Navbar';
 import { useRouter } from "next/router";
 import Router from 'next/router';
 
+
+import { useDispatch, useSelector } from 'react-redux';
+import { setPrompt, setText } from '../../redux/actions';
+
+
+import {getPrompt, getText} from '../../redux/selectors';
+
 export default function WriteStoryId(){
 
   const ul = css`
@@ -88,22 +95,23 @@ export default function WriteStoryId(){
     element.download = "myStory.txt";
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
-
-
-    // var data = new Blob([res], {type: 'text/csv'});
-    // var csvURL = window.URL.createObjectURL(data);
-    // tempLink = document.createElement('a');
-    // tempLink.href = csvURL;
-    // tempLink.setAttribute('download', 'filename.csv');
-    // tempLink.click();
   }
 
   const router = useRouter();
+  const dispatch = useDispatch();
+
+
 
   function moveToShare(){
-    console.log(router.query)
+    // dispatch(setPrompt(promptResponse));
+    // dispatch(setText(textArea));
+    localStorage.setItem("_prompt",promptResponse);
+    localStorage.setItem("_text",textArea);
+
     router.push("/share/" + router.query.storyid);
   }
+
+
 
 
   return (
@@ -140,7 +148,7 @@ export default function WriteStoryId(){
 
       <div>
         <ul css={ul}>
-          <li css={outerstyle}><div ><text>TEXT</text></div></li>
+          <li css={outerstyle}><div  ><text>TEXT</text></div></li>
           <li css={outerstyle}><div ><text css={spacer}>Save</text></div></li>
           <li css={outerstyle}><div onClick={() => moveToShare()}><text css={spacer}>Share</text></div></li>
           <li css={outerstyle}><div onClick={() => downloadTxtFile()}><text css={spacer}>Download</text></div></li>

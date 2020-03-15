@@ -9,7 +9,7 @@ const initialState = {
   text: ""
 };
 
-function rootReducer(state = initialState, action){
+export default function rootReducer(state = initialState, action){
   switch (action.type){
     case SET_LOGIN_STATUS:
       return {
@@ -17,6 +17,12 @@ function rootReducer(state = initialState, action){
         login: action.payload
       };
     case SET_PROMPT:
+      console.log("in set prompt");
+      console.log(action)
+      console.log({
+        ...state,
+        prompt: action.payload
+      });
       return{
         ...state,
         prompt: action.payload
@@ -28,9 +34,5 @@ function rootReducer(state = initialState, action){
       };
     default:
       return state;
+  }
 }
-
-
-
-
-export default rootReducer;

@@ -1,9 +1,12 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import Link from 'next/link';
 import Navbar from '../../component/Navbar';
 
+
+import {getPrompt, getText} from '../../redux/selectors';
+import { useSelector } from 'react-redux';
 
 export default function ShareStoryId(){
 
@@ -17,8 +20,20 @@ export default function ShareStoryId(){
     width: 90%;
   `;
 
-  const [promptResponse, setPromptResponse] = useState<string>("DEFAULT SOMETHING SOEMTHING");
-  const [textArea, setTextArea] = useState<string>("");
+  const [promptResponse, setPromptResponse] = useState("");
+  const [textArea, setTextArea] = useState("");
+
+
+
+
+  useEffect(() => {
+
+    const localPrompt =  localStorage.getItem("_prompt");
+    setPromptResponse(localPrompt);
+    const localTextArea = localStorage.getItem("_text");
+    setTextArea(localTextArea);
+
+  }, [promptResponse, textArea]);
 
 
 
@@ -45,7 +60,7 @@ export default function ShareStoryId(){
           <text> {promptResponse} </text>
         </div>
 
-        <textarea rows={20} value={textArea} onChange={e => setTextArea(e.target.value)} css={textarea}> </textarea>
+        <textarea rows={20} value={textArea}  css={textarea}> </textarea>
 
         <input type="submit" value="Submit" />
       </form>
