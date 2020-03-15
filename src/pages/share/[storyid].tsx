@@ -5,8 +5,6 @@ import Link from 'next/link';
 import Navbar from '../../component/Navbar';
 
 
-import {getPrompt, getText} from '../../redux/selectors';
-import { useSelector } from 'react-redux';
 
 export default function ShareStoryId(){
 

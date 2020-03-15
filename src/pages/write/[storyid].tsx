@@ -7,11 +7,6 @@ import { useRouter } from "next/router";
 import Router from 'next/router';
 
 
-import { useDispatch, useSelector } from 'react-redux';
-import { setPrompt, setText } from '../../redux/actions';
-
-
-import {getPrompt, getText} from '../../redux/selectors';
 
 export default function WriteStoryId(){
 
@@ -98,7 +93,6 @@ export default function WriteStoryId(){
   }
 
   const router = useRouter();
-  const dispatch = useDispatch();
 
 
 
