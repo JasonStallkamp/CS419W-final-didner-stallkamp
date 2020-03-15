@@ -34,7 +34,7 @@ class UserDataSource extends DataSource<object>{
 
   getUserById(id: String)
   {
-    
+
       return this.data.get(id);
   }
   getUserByName(username: string) : User | undefined
@@ -71,6 +71,10 @@ class PostDataSource extends DataSource<object>{
   getPostByTag(tag: String): Post[]
   {
     return Array.from(this.data.values()).filter(post => post.tags.includes(tag));
+  }
+  getPostByPostID(postid: String): Post
+  {
+    return Array.from(this.data.values()).find(post => post.id == postid);
   }
 
 }
@@ -145,6 +149,7 @@ type Query {
   getLatestPosts(max: Int): [Post]
   getPostsByUser(userid: String): [Post]
   getPostByTag(tag: String): [Post]
+  getPostByPostID(postid: String): Post
 }
 
 type Mutation{
@@ -189,7 +194,7 @@ function isAuthorized(req: any) : boolean
   {
     return false;
   }
-  
+
 }
 
 function getUserId(req: any) : string
@@ -206,7 +211,7 @@ const resolvers = {
     {
       if(isAuthorized(context.req))
         return [];
-      
+
       return Array.from(userDataSource.data.values())
     },
     async login(parent, args, context, info)
@@ -257,7 +262,11 @@ const resolvers = {
     getPostByTag(parent, args, context, info)
     {
       return postDataSource.getPostByTag(args.tag).map(item => ({...item,body:item.body.length > MAX_BULK_QUERY_BODY_LENGTH ? item.body.substring(0,MAX_BULK_QUERY_BODY_LENGTH - 3) + "..." : item.body}));
-    }
+    },
+    getPostByPostID(parent, args, context, info)
+    {
+      return postDataSource.getPostByPostID(args.postid);
+    },
 
   },
 

@@ -74,8 +74,8 @@ function PostDisplay({toDisplay}: {toDisplay:PostDisplayProp})
                     <p><strong>Body:</strong>{toDisplay.body}</p>
                 </div>
             </Link>
-            
-            
+
+
         </div>);
 }
 
@@ -86,7 +86,7 @@ function PostExploreSection(props : {query: String}) {
     const router = useRouter();
     if(areStoriesSet !== router.asPath)
     {
-        
+
         let varQuery = props.query.replace("$values",`
         id,
         title,
@@ -104,12 +104,13 @@ function PostExploreSection(props : {query: String}) {
             method:"POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(GraphQLQuerry)})
-        
-        
+
+
         apiPromis.catch((reason) => {
             console.log(reason);
         })
         apiPromis.then(res => res.json()).then(res =>{
+          console.log(res);
             setStories(res.data[Object.getOwnPropertyNames(res.data)[0]]);
         })
     }

@@ -3,6 +3,8 @@ import { jsx, css } from '@emotion/core';
 import React,{useState, useEffect} from 'react';
 import Link from 'next/link';
 import Navbar from '../../component/Navbar';
+import fetch from 'isomorphic-unfetch';
+import { useRouter } from 'next/router';
 
 
 
@@ -20,18 +22,72 @@ export default function ShareStoryId(){
 
   const [promptResponse, setPromptResponse] = useState("");
   const [textArea, setTextArea] = useState("");
+  const [title, setTitle] = useState("");
+  const [name, setName] = useState("");
+  const [newpost, setNewpost] = useState(false);
+
+  let existingPost = false;
+
+  const router = useRouter();
+
+  const postid = router.query.storyid;
+  console.log(postid)
+
+  const GraphQLQuerry = {
+    query: `
+          {
+            getPostByPostID(postid:"`+postid+`")
+            {
+              title,
+              author{
+                username,
+              },
+              prompt,
+              body
+            }
+          }
+   `};
+
+
 
 
 
 
   useEffect(() => {
 
-    const localPrompt =  localStorage.getItem("_prompt");
-    setPromptResponse(localPrompt);
-    const localTextArea = localStorage.getItem("_text");
-    setTextArea(localTextArea);
+    let apiPromis = fetch('/api/graphql',{
+        method:"POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(GraphQLQuerry)})
 
-  }, [promptResponse, textArea]);
+    apiPromis.catch((reason) => {
+        console.log(reason);
+    })
+    apiPromis.then(res => res.json()).then(res =>{
+        console.log(res);
+
+        if(res.data != null && res.data.getPostByPostID != null){
+          const localPrompt =  res.data.getPostByPostID.prompt;
+          setPromptResponse(localPrompt);
+          const localTextArea = res.data.getPostByPostID.body;
+          setTextArea(localTextArea);
+          const localTitle =  res.data.getPostByPostID.title;
+          setTitle(localTitle);
+          const localUsername = res.data.getPostByPostID.author.username;
+          setName(localUsername);
+
+        }
+        else{
+          const localPrompt =  localStorage.getItem("_prompt");
+          setPromptResponse(localPrompt);
+          const localTextArea = localStorage.getItem("_text");
+          setTextArea(localTextArea);
+
+
+        }
+    })
+
+  }, [promptResponse, textArea, name, title]);
 
 
 
@@ -42,14 +98,14 @@ export default function ShareStoryId(){
         <div>
           <label>
             Title:
-            <input type="text" name="title" />
+            <input type="text" name="title" value={title} onChange={e => setTitle(e.target.value)}/>
           </label>
         </div>
 
         <div>
           <label>
             Name:
-            <input type="text" name="name" />
+            <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}/>
           </label>
         </div>
 
