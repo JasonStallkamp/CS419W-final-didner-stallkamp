@@ -155,7 +155,7 @@ type Query {
 type Mutation{
   registerUser(username: String, email: String, password: String) : ErrorableOrUserAuthToken!
   logout: Boolean!
-  addPost(postid: String, authorid: String, author: String, title: String, prompt: String,  body: String): Boolean!
+  addPost(postid: String, title: String, prompt: String,  body: String): Boolean!
 }
 `;
 
@@ -243,17 +243,24 @@ const resolvers = {
     {
       if(args.max == 0)
       {
-        return Array.from(postDataSource.data.values());
+        return Array.from(postDataSource.data.values()).sort((a,b) => {
+          if(a.creationTime < b.creationTime)
+            return 1;
+          if(a.creationTime > b.creationTime)
+            return -1;
+          return 0;
+        }).map(item => ({...item,body:item.body.length > MAX_BULK_QUERY_BODY_LENGTH ? item.body.substring(0,MAX_BULK_QUERY_BODY_LENGTH - 3) + "..." : item.body}));;
       }
       else
       {
-        return Array.from(postDataSource.data.values()).sort((a,b) => {
+        let arr = Array.from(postDataSource.data.values()).sort((a,b) => {
           if(a.creationTime < b.creationTime)
-            return -1;
-          if(a.creationTime > b.creationTime)
             return 1;
+          if(a.creationTime > b.creationTime)
+            return -1;
           return 0;
-        }).map(item => ({...item,body:item.body.length > MAX_BULK_QUERY_BODY_LENGTH ? item.body.substring(0,MAX_BULK_QUERY_BODY_LENGTH - 3) + "..." : item.body}));
+        })
+        return arr.map(item => ({...item,body:item.body.length > MAX_BULK_QUERY_BODY_LENGTH ? item.body.substring(0,MAX_BULK_QUERY_BODY_LENGTH - 3) + "..." : item.body}));
       }
     },
     getPostsByUser(parent, args, context, info)
@@ -322,9 +329,17 @@ const resolvers = {
     },
     addPost(parent, args, context, info)
     {
-      console.log("in add post")
       const id = args.postid;
-      postDataSource.data.set(id,{id, authorID:args.authorid, title:args.title,prompt:args.prompt,body:args.body,tags:[]});
+      if(isAuthorized(context.req))
+      {
+        postDataSource.data.set(id,{id, authorID:getUserId(context.req), title:args.title,prompt:args.prompt,body:args.body,tags:[],creationTime: new Date()});
+      }
+      else
+      {
+        postDataSource.data.set(id,{id, authorID:"0", title:args.title,prompt:args.prompt,body:args.body,tags:[],creationTime: new Date()});
+      }
+
+      
       fs.writeFileSync("Posts.json", JSON.stringify(Array.from(postDataSource.data.values())));
       return true;
     }
