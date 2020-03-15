@@ -155,7 +155,7 @@ type Query {
 type Mutation{
   registerUser(username: String, email: String, password: String) : ErrorableOrUserAuthToken!
   logout: Boolean!
-  addPost(id: String, author: String, title: String, prompt: String,  body: String): Boolean!
+  addPost(postid: String, authorid: String, author: String, title: String, prompt: String,  body: String): Boolean!
 }
 `;
 
@@ -323,8 +323,8 @@ const resolvers = {
     addPost(parent, args, context, info)
     {
       console.log("in add post")
-      const id = args.id;
-      postDataSource.data.set(id,{id, authorID:args.id, title:args.title,prompt:args.prompt,body:args.body,tags:[]});
+      const id = args.postid;
+      postDataSource.data.set(id,{id, authorID:args.authorid, title:args.title,prompt:args.prompt,body:args.body,tags:[]});
       fs.writeFileSync("Posts.json", JSON.stringify(Array.from(postDataSource.data.values())));
       return true;
     }

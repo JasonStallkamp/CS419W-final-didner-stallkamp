@@ -1,1 +1,68 @@
-[{"id":"xHqUqiR7uJgWtiNNByrUBOeF","username":"stallkja","email":"stallkja@oregonstate.edu","hash":"$2b$10$i/lwC9JIraEwJ4ts1BL/PuX.rD/v1cchN46alNrc9KlqqhoMcvDbm"},{"id":"C1bsSCR9v9T2IRLY3Rudaztg","username":"stallkja2","email":"stallkja@oregonstate.edu","hash":"$2b$10$5cGFQ8n50C/B9LJZ2OIJ3uw0HG7/WYyPVZ4nxxsOVgZCpgz3W9UTe"},{"id":"eRdQJzBhbJscvlaS3gq11WPA","username":"username","email":"email@mail.com","hash":"$2b$10$DDffUGcLGgsG.CsrShr/nuM1r8AjQsICYkYawt4BVGCNEJXZwJ0O2"},{"id":"iv8xiaKFXbqfWHrWos8YN2bE","username":"rickst","email":"jstallkamp@gmail.com","hash":"$2b$10$xw/ZhbdbYqUNo2mvdApyfePgWNofcNguNyffpOHFAcFH5aTQ1t0pO"},{"id":"JiEEilj1APvmXdbaV5uANTe3","username":"stallkja3","email":"jstallkamp@gmail.com","hash":"$2b$10$8VFksuBm2DngABZ3fX7PQeQq1FA/z36YH5m3UFixUeH26c1hrkOV2"},{"id":"13BJ7pj2SWy27hVKKQ6XfD5m","username":"stallkja4","email":"stallkja@oregonstate.edu","hash":"$2b$10$f8f2KuvVInc1wa/nW41JoOxhjzVCyHwalCmtbgBY8a.sbye21put."},{"id":"u46k3v6NiOB0N4YQaZbna7ya","username":"stallkja5","email":"stallkja1@oregonstate.edu","hash":"$2b$10$dQZzEeh4xeDi/w5e8xkgMul8HBvoREgSwx6Dw9XC1Tz/RfUGN28XK"},{"id":"VeYv2vbkOAg6aQR4KqZ79eF8","username":"rickst8","email":"jstallkamp1@gmail.com","hash":"$2b$10$rznu.Pf6WJc9.cP2SoeEp.td0BpHxpWQV8jmzu9mI7zcOh10m1F8y"},{"id":"ooftDGDB1LLIQGl3YWqK5tAT","username":"rickst9","email":"jstallkamp8@gmail.com","hash":"$2b$10$ddZrEbrz68IMkowGM9u36.bprv6mP9baccS719ggLlBRvIlEo0Fv2"},{"id":"RsyIfqNPjh9d4ojJyF6TjOVH","username":"adidner","email":"adidner@gmail","hash":"$2b$10$76pOUjhxloYG.aFuTj.xJOKX5VNkuKAZkctrZuzE3ag09E71YNlL6"}]
+[
+  {
+    "id": "0",
+    "username": "anonymous",
+    "email": "",
+    "hash": ""
+  },
+  {
+    "id": "xHqUqiR7uJgWtiNNByrUBOeF",
+    "username": "stallkja",
+    "email": "stallkja@oregonstate.edu",
+    "hash": "$2b$10$i/lwC9JIraEwJ4ts1BL/PuX.rD/v1cchN46alNrc9KlqqhoMcvDbm"
+  },
+  {
+    "id": "C1bsSCR9v9T2IRLY3Rudaztg",
+    "username": "stallkja2",
+    "email": "stallkja@oregonstate.edu",
+    "hash": "$2b$10$5cGFQ8n50C/B9LJZ2OIJ3uw0HG7/WYyPVZ4nxxsOVgZCpgz3W9UTe"
+  },
+  {
+    "id": "eRdQJzBhbJscvlaS3gq11WPA",
+    "username": "username",
+    "email": "email@mail.com",
+    "hash": "$2b$10$DDffUGcLGgsG.CsrShr/nuM1r8AjQsICYkYawt4BVGCNEJXZwJ0O2"
+  },
+  {
+    "id": "iv8xiaKFXbqfWHrWos8YN2bE",
+    "username": "rickst",
+    "email": "jstallkamp@gmail.com",
+    "hash": "$2b$10$xw/ZhbdbYqUNo2mvdApyfePgWNofcNguNyffpOHFAcFH5aTQ1t0pO"
+  },
+  {
+    "id": "JiEEilj1APvmXdbaV5uANTe3",
+    "username": "stallkja3",
+    "email": "jstallkamp@gmail.com",
+    "hash": "$2b$10$8VFksuBm2DngABZ3fX7PQeQq1FA/z36YH5m3UFixUeH26c1hrkOV2"
+  },
+  {
+    "id": "13BJ7pj2SWy27hVKKQ6XfD5m",
+    "username": "stallkja4",
+    "email": "stallkja@oregonstate.edu",
+    "hash": "$2b$10$f8f2KuvVInc1wa/nW41JoOxhjzVCyHwalCmtbgBY8a.sbye21put."
+  },
+  {
+    "id": "u46k3v6NiOB0N4YQaZbna7ya",
+    "username": "stallkja5",
+    "email": "stallkja1@oregonstate.edu",
+    "hash": "$2b$10$dQZzEeh4xeDi/w5e8xkgMul8HBvoREgSwx6Dw9XC1Tz/RfUGN28XK"
+  },
+  {
+    "id": "VeYv2vbkOAg6aQR4KqZ79eF8",
+    "username": "rickst8",
+    "email": "jstallkamp1@gmail.com",
+    "hash": "$2b$10$rznu.Pf6WJc9.cP2SoeEp.td0BpHxpWQV8jmzu9mI7zcOh10m1F8y"
+  },
+  {
+    "id": "ooftDGDB1LLIQGl3YWqK5tAT",
+    "username": "rickst9",
+    "email": "jstallkamp8@gmail.com",
+    "hash": "$2b$10$ddZrEbrz68IMkowGM9u36.bprv6mP9baccS719ggLlBRvIlEo0Fv2"
+  },
+  {
+    "id": "RsyIfqNPjh9d4ojJyF6TjOVH",
+    "username": "adidner",
+    "email": "adidner@gmail",
+    "hash": "$2b$10$76pOUjhxloYG.aFuTj.xJOKX5VNkuKAZkctrZuzE3ag09E71YNlL6"
+  }
+]

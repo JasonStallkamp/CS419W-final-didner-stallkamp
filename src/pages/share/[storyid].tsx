@@ -91,12 +91,41 @@ export default function ShareStoryId(){
 
 
   function sharePost(){
+    let authorid = 0;
+    let loggedIn = false;
+    let UID = null;
+    const GraphQLQuerry = {query:`
+      {
+        isLoggedIn
+        {
+          isLoggedIn,
+          userid
+        }
+      }
+      `};
+      fetch('/api/graphql',{
+        method:"POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(GraphQLQuerry)}).then(res => res.json()).then(res =>{
+          loggedIn = res.data.isLoggedIn.isLoggedIn
+          if(res.data.isLoggedIn.isLoggedIn)
+          {
+            authorid = res.data.isLoggedIn.userid;
+          }
+          addPost(router.query.storyid, authorid,name,title,promptResponse,textArea);
+        })
+    }
+
+
+
+  function addPost(storyid, authorid,name,title,promptResponse,textArea){
     console.log("in share posts")
     const share_post = {query:`
     mutation
     {
       addPost(
-      id:"`  + router.query.storyid +
+      postid:"`  + storyid +
+      `",authorid:"`+ authorid +
       `",author:"`+ name +
       `",title:"`+title +
       `",prompt:"` +promptResponse+
