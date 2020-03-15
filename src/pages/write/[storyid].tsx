@@ -23,10 +23,17 @@ export default function WriteStoryId(){
     display: inline;
   `;
 
+  const outerstyleright = css`
+    float: right;
+    display: inline;
+  `;
+
   const textarea = css`
     height: 60%;
-    width: 90%;
+    width: 97%;
   `;
+
+
 
 
   const spacer = css`
@@ -41,7 +48,9 @@ export default function WriteStoryId(){
 
   const container = css`
     padding: 15px;
-    border: black;
+    margin: 10px;
+    border-style: solid;
+
   `;
 
   const [adj1, setAdj1] = useState<boolean>(false);
@@ -54,7 +63,7 @@ export default function WriteStoryId(){
   const [noun2, setNoun2] = useState<boolean>(false);
   const [location,setLocation] = useState<boolean>(false);
 
-  const [promptResponse, setPromptResponse] = useState<string>("RESPONSE FROM PROMPT SITE WOULD GO HERE, HIT THE REFRESH BUTTON FOR A PROMPT");
+  const [promptResponse, setPromptResponse] = useState<string>("A snide truck driver and a smelly history professor.");
   const [textArea, setTextArea] = useState<string>("");
 
 
@@ -117,15 +126,6 @@ export default function WriteStoryId(){
         <ul css={ul}>
           <li css={outerstyle}><text style={{padding: 10, fontSize: 25, backgroundColor: 'lightblue'}}>Prompt</text></li>
           <li css={outerstyle}><text onClick={() => fetchPrompt()} style={{padding: 10, fontSize: 25, backgroundColor: 'lightgreen'}}>↻</text></li>
-        </ul>
-      </div>
-
-      <div css={container}>
-        <text> {promptResponse} </text>
-      </div>
-
-      <div>
-        <ul css={ul}>
           <ListSelector selected={adj1} setter={setAdj1}>adj</ListSelector>
           <ListSelector selected={adj2} setter={setAdj2}>adj</ListSelector>
           <ListSelector selected={noun1} setter={setNoun1}>noun</ListSelector>
@@ -138,19 +138,23 @@ export default function WriteStoryId(){
         </ul>
       </div>
 
+      <div css={container}>
+        <text style={{fontSize: 19}}> {promptResponse} </text>
+      </div>
+
+      <div style={{marginLeft: 10, paddingTop: 15}}>
+        <text>TEXT</text>
+      </div>
+
+      <textarea style={{marginLeft: 10}} rows={20} value={textArea} onChange={e => setTextArea(e.target.value)} css={textarea}> </textarea>
 
 
       <div>
         <ul css={ul}>
-          <li css={outerstyle}><div  ><text>TEXT</text></div></li>
-          <li css={outerstyle}><div ><text css={spacer}>Save</text></div></li>
-          <li css={outerstyle}><div onClick={() => moveToShare()}><text css={spacer}>Share</text></div></li>
-          <li css={outerstyle}><div onClick={() => downloadTxtFile()}><text css={spacer}>Download</text></div></li>
+          <li css={outerstyleright}><div onClick={() => moveToShare()}><text css={spacer}>Share</text></div></li>
+          <li css={outerstyleright}><div onClick={() => downloadTxtFile()}><text css={spacer}>Download</text></div></li>
         </ul>
       </div>
-
-
-      <textarea rows={20} value={textArea} onChange={e => setTextArea(e.target.value)} css={textarea}> </textarea>
 
     </div>
   );
@@ -165,8 +169,8 @@ function ListSelector(props){
   `;
 
   const style =css`
-    padding: 10px;
-    margin: 10px;
+    padding: 8px;
+    margin-Left: 17px;
     border-top: 1px solid #CCCCCC;
     border-right: 1px solid #333333;
     border-bottom: 1px solid #333333;

@@ -20,6 +20,17 @@ export default function ShareStoryId(){
     width: 90%;
   `;
 
+  const spacer = css`
+
+    padding: 10px 10px 10px 10px;
+    background-color: lightgray;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
+    margin: 10px 10px 10px 10px;
+  `;
+
   const [promptResponse, setPromptResponse] = useState("");
   const [textArea, setTextArea] = useState("");
   const [title, setTitle] = useState("");
@@ -120,17 +131,10 @@ export default function ShareStoryId(){
     <div>
       <Navbar/>
       <form>
-        <div>
+        <div style={{marginLeft: 13 , marginTop: 20, marginBottom: 10}}>
           <label>
             Title:
             <input type="text" name="title" value={title} onChange={e => setTitle(e.target.value)}/>
-          </label>
-        </div>
-
-        <div>
-          <label>
-            Name:
-            <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}/>
           </label>
         </div>
 
@@ -139,9 +143,15 @@ export default function ShareStoryId(){
           <text> {promptResponse} </text>
         </div>
 
-        <textarea rows={20} value={textArea}  css={textarea}> </textarea>
 
-        <text onClick={()=>{sharePost()}} >SUBMIT</text>
+        <div css={container}>
+          <text> Text:  </text>
+          <text> {textArea} </text>
+        </div>
+
+        <div style={{marginTop: 50}}>
+          <text css={spacer} onClick={()=>{sharePost()}}> SHARE</text>
+        </div>
       </form>
     </div>
   );

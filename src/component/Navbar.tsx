@@ -61,7 +61,7 @@ function Navbar(props) {
       <div>
       <ul css={ul}>
         <NavigationLink path="/explore" align="left">Explore</NavigationLink>
-        <NavigationLink path="/write/1" align="left">Write</NavigationLink>
+        <NavigationLink path={"/write/" + StoryID} align="left">Write</NavigationLink>
         <NavigationLink path="/user/loggout" align="right">Loggout</NavigationLink>
         <NavigationLink path="/user/[userid]" as={"/user/" + userid} align="right">My Posts</NavigationLink>
       </ul>
