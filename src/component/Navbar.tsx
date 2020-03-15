@@ -60,7 +60,6 @@ function Navbar(props) {
     return (
       <div>
       <ul css={ul}>
-        <NavigationLink path="/" align="left">Home</NavigationLink>
         <NavigationLink path="/explore" align="left">Explore</NavigationLink>
         <NavigationLink path="/write/1" align="left">Write</NavigationLink>
         <NavigationLink path="/user/loggout" align="right">Loggout</NavigationLink>

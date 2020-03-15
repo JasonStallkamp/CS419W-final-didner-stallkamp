@@ -23,6 +23,7 @@
     "js-cookie": "^2.2.1",
     "next": "^9.3.0",
     "next-cookies": "^2.0.3",
+    "next-redux-wrapper": "^5.0.0",
     "randomstring": "^1.1.5",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
