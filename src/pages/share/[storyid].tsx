@@ -114,16 +114,19 @@ export default function ShareStoryId(){
           `")
         }
         `};
-    
+
         fetch('/api/graphql',{
             method:"POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(share_post),
-    
+
         }). then(res=> res.json())
         .then(res=> {
           console.log(res)
         });
+
+        router.push('/explore');
+
     }
 
 
