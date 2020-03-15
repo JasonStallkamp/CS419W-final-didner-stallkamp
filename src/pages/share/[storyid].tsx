@@ -93,7 +93,7 @@ export default function ShareStoryId(){
   function sharePost(){
     console.log("in share posts")
     const share_post = {query:`
-    mutation addPost
+    mutation
     {
       addPost(
       id:"`  + router.query.storyid +
@@ -101,9 +101,7 @@ export default function ShareStoryId(){
       `",title:"`+title +
       `",prompt:"` +promptResponse+
       `",body:"`+textArea+
-      `"){
-        
-      }
+      `")
     }
     `};
 
@@ -112,6 +110,9 @@ export default function ShareStoryId(){
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(share_post),
 
+    }). then(res=> res.json())
+    .then(res=> {
+      console.log(res)
     });
   }
 
