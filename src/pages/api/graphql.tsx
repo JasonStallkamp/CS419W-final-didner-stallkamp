@@ -324,8 +324,8 @@ const resolvers = {
     {
       console.log("in add post")
       const id = args.id;
-      postDataSource.data.set(id,{id, authorID:args.id, title:args.title,prompt:args.prompt,body:arts.body,tags:[]});
-      fs.writeFileSync("Posts.json", JSON.stringify(Array.from(userDataSource.data.values())));
+      postDataSource.data.set(id,{id, authorID:args.id, title:args.title,prompt:args.prompt,body:args.body,tags:[]});
+      fs.writeFileSync("Posts.json", JSON.stringify(Array.from(postDataSource.data.values())));
       return true;
     }
   },
