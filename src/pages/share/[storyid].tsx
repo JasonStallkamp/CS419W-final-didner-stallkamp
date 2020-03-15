@@ -90,6 +90,31 @@ export default function ShareStoryId(){
   }, [promptResponse, textArea, name, title]);
 
 
+  function sharePost(){
+    console.log("in share posts")
+    const share_post = {query:`
+    mutation addPost
+    {
+      addPost(
+      id:"`  + router.query.storyid +
+      `",author:"`+ name +
+      `",title:"`+title +
+      `",prompt:"` +promptResponse+
+      `",body:"`+textArea+
+      `"){
+        
+      }
+    }
+    `};
+
+    fetch('/api/graphql',{
+        method:"POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(share_post),
+
+    });
+  }
+
 
   return(
     <div>
@@ -116,7 +141,7 @@ export default function ShareStoryId(){
 
         <textarea rows={20} value={textArea}  css={textarea}> </textarea>
 
-        <input type="submit" value="Submit" />
+        <text onClick={()=>{sharePost()}} >SUBMIT</text>
       </form>
     </div>
   );
